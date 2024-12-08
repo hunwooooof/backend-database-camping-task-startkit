@@ -385,7 +385,7 @@ on
     "SKILL".id = "COACH_LINK_SKILL".skill_id
 limit 1;
 
--- 6-3. 查詢：計算 12 月份組合包方案的銷售數量（改成 12 月因為 11 月沒有資料）
+-- 6-3. 查詢：計算 12 月份組合包方案的銷售數量（改成 12 月因為 11 月沒有資料，以下題目同）
 -- 顯示須包含以下欄位： 組合包方案名稱, 銷售數量
 
 select
@@ -404,10 +404,26 @@ inner join
 on
     "CREDIT_PACKAGE".id = "CREDIT_PURCHASE".credit_package_id;
 
-
-
--- 6-4. 查詢：計算 11 月份總營收（使用 purchase_at 欄位統計）
+-- 6-4. 查詢：計算 12 月份總營收（使用 purchase_at 欄位統計）
 -- 顯示須包含以下欄位： 總營收
 
--- 6-5. 查詢：計算 11 月份有預約課程的會員人數（需使用 Distinct，並用 created_at 和 status 欄位統計）
+select
+    SUM(price_paid) as 總營收
+from
+    "CREDIT_PURCHASE"
+where
+    EXTRACT(MONTH from purchase_at) = 12;
+
+-- 6-5. 查詢：計算 12 月份有預約課程的會員人數（需使用 Distinct，並用 created_at 和 status 欄位統計）
 -- 顯示須包含以下欄位： 預約會員人數
+
+
+select
+    COUNT(distinct_user_id) as 預約會員人數
+from
+    (
+        select Distinct user_id as distinct_user_id
+        from "COURSE_BOOKING"
+        where EXTRACT(MONTH from created_at) = 12
+        and status != '課程已取消'
+    )
